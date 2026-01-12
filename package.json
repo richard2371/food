@@ -24,7 +24,7 @@
   "dependencies": {
     "firebase": "^12.7.0",
     "pinia": "^3.0.4",
-    "vite-plugin-vuetify": "^2.0.4",
+    "vite-plugin-vuetify": "^2.1.2",
     "vue": "latest",
     "vue-router": "latest"
   }
