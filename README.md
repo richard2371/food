@@ -6,7 +6,6 @@ This template here will get you up & running with adding the two together :)
 
 ## Demo Here
 
-[Online Demo](https://vuetify3nuxt3starter.behonbaker.com)
 
 ## How to use
 
