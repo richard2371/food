@@ -1,80 +1,47 @@
 <template>
-  <VContainer fluid class="fill-height">
-    <VRow no-gutters align="center" justify="center" class="fill-height">
-      <VCol cols="12" md="6" lg="5" sm="6">
-        <VRow no-gutters align="center" justify="center">
-          <VCol cols="12" md="6">
-            <h1>Sign In</h1>
-            <p class="text-medium-emphasis">Enter your details to get started</p>
-
-            <VForm @submit.prevent="submit" class="mt-7">
-              <div class="mt-1">
-                <label class="label text-grey-darken-2" for="email">Email</label>
-                <VTextField
-                  :rules="[ruleRequired, ruleEmail]"
-                  v-model="email"
-                  prepend-inner-icon="fluent:mail-24-regular"
-                  id="email"
-                  name="email"
-                  type="email"
-                />
-              </div>
-              <div class="mt-1">
-                <label class="label text-grey-darken-2" for="password">Password</label>
-                <VTextField
-                  :rules="[ruleRequired, rulePassLen]"
-                  v-model="password"
-                  prepend-inner-icon="fluent:password-20-regular"
-                  id="password"
-                  name="password"
-                  type="password"
-                />
-              </div>
-              <div class="mt-5">
-                <VBtn type="submit" block min-height="44" class="gradient primary">Sign In</VBtn>
-              </div>
-            </VForm>
-            <p class="text-body-2 mt-10">
-              <NuxtLink to="/reset-password" class="font-weight-bold text-primary"
-                >Forgot password?</NuxtLink
-              >
-            </p>
-            <p class="text-body-2 mt-4">
-              <span
-                >Don't have an account?
-                <NuxtLink to="/signup" class="font-weight-bold text-primary"
-                  >Sign Up</NuxtLink
-                ></span
-              >
-            </p>
-          </VCol>
-        </VRow>
-      </VCol>
-      <VCol class="hidden-md-and-down fill-height" md="6" lg="7">
-        <VImg
-          src="https://wallpaper.dog/large/5557744.jpg"
-          cover
-          class="h-100 rounded-xl d-flex align-center justify-center"
+  <VContainer fluid class="pa-4">
+    <VRow dense>
+      <VCol
+        v-for="cat in categorias"
+        :key="cat.title"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <VCard
+          class="d-flex flex-column align-center justify-center pa-6 rounded-xl elevation-4 hoverable"
+          color="green-lighten-4"
+          height="200"
+          :to="cat.to"
+          ripple
         >
-          <div class="text-center w-50 text-white mx-auto">
-            <h2 class="mb-4">Start your journey today</h2>
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores, inventore quia.
-              Dolorum dolores ad ipsum voluptatum rem, hic placeat, odio, odit numquam quod
-              veritatis accusantium assumenda! Sequi, provident in! Iure!
-            </p>
-          </div>
-        </VImg>
+          <VIcon size="48" class="mb-4" color="green-darken-3">
+            {{ cat.icon }}
+          </VIcon>
+          <div class="text-h6 font-weight-bold">{{ cat.title }}</div>
+        </VCard>
       </VCol>
     </VRow>
   </VContainer>
 </template>
 
 <script setup>
-const email = ref("");
-const password = ref("");
-
-const { ruleEmail, rulePassLen, ruleRequired } = useFormRules();
-
-const submit = async () => {};
+const categorias = [
+  { title: 'Desayunos', icon: 'mdi-coffee', to: '/recetas/desayunos' },
+  { title: 'Refacciones', icon: 'mdi-food-croissant', to: '/recetas/refacciones' },
+  { title: 'Almuerzos', icon: 'mdi-food-steak', to: '/recetas/almuerzos' },
+  { title: 'Merienda', icon: 'mdi-food-apple', to: '/recetas/merienda' },
+  { title: 'Cena', icon: 'mdi-food-turkey', to: '/recetas/cena' }
+]
 </script>
+
+<style scoped>
+.v-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.v-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+</style>
