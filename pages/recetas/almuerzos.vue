@@ -12,9 +12,9 @@
 
         <!-- LISTA DE RECETAS SOLO AlmuerzoS -->
         <VRow dense>
-            <VCol v-for="r in recetas.filter(rec => rec.categoria === 'Almuerzo')" :key="r.id" cols="12" sm="6" md="4">
+            <VCol v-for="r in recetasAlmuerzos"  :key="r.id" cols="12" sm="6" md="4">
 
-                <VCard class="rounded-xl">
+                <VCard class="rounded-xl" :color="r.cocinado ?'black':r.seleccionada?'green':''"  :variant="r.cocinado || r.seleccionada ? 'tonal' : 'elevated'">
                     <VImg :src="r.imagenURL" height="180" cover />
 
                     <VCardTitle class="text-h6">{{ r.nombre }}</VCardTitle>
@@ -204,6 +204,21 @@ const loadRecetas = () => {
         })
     })
 }
+const recetasAlmuerzos = computed(() => {
+// alert(1)
+  return recetas.value
+    .filter(r => r.categoria === 'Almuerzo')
+    .slice()
+    .sort((a, b) => {
+      const prioridad = (r) => {
+        if (r.seleccionada) return 1
+        if (r.cocinado) return 3
+        return 2
+      }
+
+      return prioridad(a) - prioridad(b)
+    })
+})
 
 
 const loadIngredientes = async () => {

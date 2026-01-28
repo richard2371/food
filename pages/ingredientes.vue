@@ -5,22 +5,19 @@
       <h2>Ingredientes 🧄</h2>
       <VBtn color="primary" @click="openDialog()">Nuevo</VBtn>
     </VRow>
+    <v-card-title class="d-flex align-center pe-2">
+     
 
+      <v-spacer></v-spacer>
+
+      <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
+        variant="solo-filled" flat hide-details single-line></v-text-field>
+    </v-card-title>
     <!-- Tabla -->
-    <VDataTable
-      :headers="headers"
-      :items="ingredientes"
-      item-key="id"
-      density="compact"
-    >
+    <VDataTable v-model:search="search" :headers="headers" :items="ingredientes" item-key="id" density="compact">
       <template #item.actions="{ item }">
         <VBtn icon="mdi-pencil" variant="text" @click="edit(item)" />
-        <VBtn
-          icon="mdi-delete"
-          variant="text"
-          color="red"
-          @click="remove(item.id)"
-        />
+        <VBtn icon="mdi-delete" variant="text" color="red" @click="remove(item.id)" />
       </template>
     </VDataTable>
 
@@ -32,16 +29,12 @@
         </VCardTitle>
 
         <VCardText>
-          <VTextField
-            label="Nombre"
-            v-model="form.nombre"
-            required
-          />
-          <VTextField
-            label="Descripción"
-            v-model="form.descripcion"
-          />
+          <VTextField label="Nombre" v-model="form.nombre" required />
+          <VTextField label="Descripción" v-model="form.descripcion" />
+          <VSelect label="Categoría" v-model="form.categoria" :items="categorias" clearable item-title="nombre"
+            item-value="nombre" />
         </VCardText>
+
 
         <VCardActions>
           <VSpacer />
@@ -69,16 +62,18 @@ import { db } from '@/utils/firebase'
 // State
 const ingredientes = ref([])
 const dialog = ref(false)
-
+  const search = ref('')
 const form = ref({
   id: null,
   nombre: '',
-  descripcion: ''
+  descripcion: '',
+  categoria: ''
 })
-
+const categorias = ref([]);
 // Tabla
 const headers = [
   { title: 'Nombre', value: 'nombre' },
+  { title: 'Categoria', value: 'categoria' },
   { title: 'Descripción', value: 'descripcion' },
   { title: 'Acciones', value: 'actions', sortable: false }
 ]
@@ -118,7 +113,8 @@ const save = async () => {
       doc(db, 'ingredientes', form.value.id),
       {
         nombre: form.value.nombre,
-        descripcion: form.value.descripcion
+        descripcion: form.value.descripcion,
+        categoria: form.value.categoria || null,
       }
     )
   } else {
@@ -126,6 +122,7 @@ const save = async () => {
     await addDoc(collection(db, 'ingredientes'), {
       nombre: form.value.nombre,
       descripcion: form.value.descripcion,
+      categoria: form.value.categoria || null,
       createdAt: serverTimestamp()
     })
   }
@@ -133,7 +130,13 @@ const save = async () => {
   dialog.value = false
   load()
 }
-
+const loadCategorias = async () => {
+  categorias.value = []
+  const snap = await getDocs(collection(db, 'categorias'))
+  snap.forEach(d => {
+    categorias.value.push({ id: d.id, ...d.data() })
+  })
+}
 // 🗑️ Eliminar
 const remove = async (id) => {
   if (!confirm('¿Eliminar ingrediente?')) return
@@ -141,5 +144,8 @@ const remove = async (id) => {
   load()
 }
 
-onMounted(load)
+onMounted(() => {
+  load()
+  loadCategorias()
+})
 </script>

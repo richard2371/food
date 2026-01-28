@@ -12,9 +12,10 @@
 
         <!-- LISTA DE RECETAS SOLO DESAYUNOS -->
         <VRow dense>
-            <VCol v-for="r in recetas.filter(rec => rec.categoria === 'Desayuno')" :key="r.id" cols="12" sm="6" md="4">
+            <VCol v-for="r in recetasDesayunoOrdenadas" :key="r.id" cols="12" sm="6" md="4">
 
-                <VCard class="rounded-xl">
+                <VCard class="rounded-xl "   :color="r.cocinado ?'black':r.seleccionada?'green':''"  :variant="r.cocinado || r.seleccionada ? 'tonal' : 'elevated'"
+ >
                     <VImg :src="r.imagenURL" height="180" cover />
 
                     <VCardTitle class="text-h6">{{ r.nombre }}</VCardTitle>
@@ -181,7 +182,11 @@ const show = ref(false)
 const ingredientesDisponibles = ref([])
 const dialog = ref(false)
 const saving = ref(false)
-
+const getColor = (r) => {
+  if (r.cocinado) return 'grey-darken-3'   // ya cocinado ⚫
+  if (r.seleccionada) return 'green'       // en carrito 🟢
+  return undefined                         // normal ⚪
+}
 const form = ref({
     id: null, nombre: '', categoria: 'Desayuno', tiempo: '', descripcion: '', ingredientes: [], cocinado: false, imagenURL: ''
 })
@@ -205,7 +210,21 @@ const loadRecetas = () => {
     })
 }
 
+const recetasDesayunoOrdenadas = computed(() => {
+// alert(1)
+  return recetas.value
+    .filter(r => r.categoria === 'Desayuno')
+    .slice()
+    .sort((a, b) => {
+      const prioridad = (r) => {
+        if (r.seleccionada) return 1
+        if (r.cocinado) return 3
+        return 2
+      }
 
+      return prioridad(a) - prioridad(b)
+    })
+})
 const loadIngredientes = async () => {
     ingredientesDisponibles.value = []
     const snap = await getDocs(collection(db, 'ingredientes'))

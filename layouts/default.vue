@@ -21,6 +21,8 @@
 
         <VListItem prepend-icon="mdi-silverware-fork-knife" title="Ingredientes" to="/ingredientes" />
 
+         <VListItem prepend-icon="mdi-peanut-outline" title="Categoria ingredientes" to="/categoria" />
+
         <!-- <VListItem prepend-icon="mdi-check-circle-outline" title="Cocinadas" to="/cocinadas" /> -->
 
       </VList>
