@@ -208,7 +208,7 @@ const loadRecetas = () => {
 const recetasCenas = computed(() => {
 // alert(1)
   return recetas.value
-    .filter(r => r.categoria === 'Desayuno')
+    .filter(r => r.categoria === 'Cena')
     .slice()
     .sort((a, b) => {
       const prioridad = (r) => {
